@@ -1,4 +1,3 @@
-# encoding:utf8
 '''
 客户端对数据的接受和对已生成数据的发送，选手可以不关注此模块
 
@@ -6,7 +5,7 @@
 
 import socket
 import json
-
+# import time
 from ballclient.service import service
 import ballclient.service.constants as constants
 
@@ -20,15 +19,18 @@ def try_again(func):
         connect_time = 1
         while connect_time <= 30:
             try:
+                # print('func=',func(*args, **kwargs))
                 return func(*args, **kwargs)
             except Exception:
-                print "connect server failed.....connect_time:%s" % connect_time
+                print ("connect server failed..... connect_time:%s" % connect_time)
                 connect_time += 1
-        print "can not connect with server. %s,%s" % args
+                # time.sleep(1)
+        print ("can not connect with server. %s,%s" % args)
         exit(1)
     return wraper
 
 @try_again
+
 def connect_socket(ip=None, port=None):
     global _socket
     _socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,25 +42,29 @@ def start(ip=None, port=None):
     try:
         connect_socket(ip,port)
         register()
+        point = []
         while 1:
             data = _receive()
             if data['msg_name'] == "round":
+                # message = service.round(data,mapmsg,force)
                 message = service.round(data)
                 send_dict(message)
             elif data['msg_name'] == "leg_start":
+                # (mapmsg,force) = service.leg_start(data)
                 service.leg_start(data)
             elif data['msg_name'] == "leg_end":
+                # point.append(service.leg_end(data))
+                # print(point)
                 service.leg_end(data)
             elif data['msg_name'] == "game_over":
                 service.game_over(data)
                 return
             else:
-                print "invalid msg_name."
+                print ("invalid msg_name.")
     except socket.error:
-        print "can not connect with server. %s,%s" % (ip, port)
+        print ("can not connect with server. %s,%s" % (ip, port))
     except Exception as e:
-        print "some error happend. the receive data:"
-        print data
+        print ("some error happend. the receive data:",data,type(data))
     finally:
         if _socket:
             _socket.close()
@@ -77,8 +83,8 @@ def register():
 
 
 def send_dict(data):
-    data_str = json.dumps(data)
-    _socket.sendall(add_str_len(data_str))
+    data_str = json.dumps(data)                         
+    _socket.sendall(add_str_len(data_str).encode())
 
 
 class Receiver(object):
@@ -89,15 +95,17 @@ class Receiver(object):
         while 1:
             d = _socket.recv(SOCKET_CACHE)
             try:
-                if d[0:5].isdigit() and d[5] == "{":
+                # print(d,d[:5].isdigit(), d[5] == 123)
+                if d[:5].isdigit() and d[5] == 123:
                     self._cach = ""
                     data = remove_json_num(d)
+                    # print(json.loads(data))
                     return json.loads(data)
                 else:
                     data = remove_json_num(self._cach + d)
                     return json.loads(data)
             except Exception:
-                print "receive data error.cach the data and wait for next."
+                print ("receive data error.cach the data and wait for next.")
                 self._cach += d
 
 
@@ -121,7 +129,7 @@ def receive_game_data():
             send_msg = add_str_len(json.dumps(return_msg))
             _socket.sendall(send_msg)
     except:
-        print 'error receive data......'
+        print ('error receive data......')
 
     return 1
 

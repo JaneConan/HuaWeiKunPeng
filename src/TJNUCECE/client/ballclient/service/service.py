@@ -16,16 +16,16 @@ def leg_start(msg):
     :param msg:
     :return: None
     '''
-    print "round start"
+    print("round start")
 
-    print "msg_name:%s" % msg['msg_name']
-    print "map_width:%s" % msg['msg_data']['map']['width']
-    print "map_height:%s" % msg['msg_data']['map']['height']
-    print "vision:%s" % msg['msg_data']['map']['vision']
-    print "meteor:%s" % msg['msg_data']['map']['meteor']
-    print "tunnel:%s" % msg['msg_data']['map']['tunnel']
-    print "wormhole:%s" % msg['msg_data']['map']['wormhole']
-    print "teams:%s" % msg['msg_data']['teams']
+    print("msg_name:%s" % msg['msg_name'])
+    print("map_width:%s" % msg['msg_data']['map']['width'])
+    print("map_height:%s" % msg['msg_data']['map']['height'])
+    print("vision:%s" % msg['msg_data']['map']['vision'])
+    print("meteor:%s" % msg['msg_data']['map']['meteor'])
+    print("tunnel:%s" % msg['msg_data']['map']['tunnel'])
+    print("wormhole:%s" % msg['msg_data']['map']['wormhole'])
+    print("teams:%s" % msg['msg_data']['teams'])
 
 
 def leg_end(msg):
@@ -50,16 +50,16 @@ def leg_end(msg):
 
     :return:
     '''
-    print "round over"
+    print("round over",deleteme)
     teams = msg["msg_data"]['teams']
     for team in teams:
-        print "teams:%s" % team['id']
-        print "point:%s" % team['point']
-        print "\n\n"
+        print("teams:%s" % team['id'])
+        print("point:%s" % team['point'])
+        print("\n\n")
 
 
 def game_over(msg):
-    print "game over!"
+    print("game over!")
 
 
 def round(msg):
@@ -69,7 +69,7 @@ def round(msg):
     :return:
     return type: dict
     '''
-    print "round"
+    print("round")
 
 
     round_id = msg['msg_data']['round_id']
@@ -84,6 +84,7 @@ def round(msg):
         }
     }
     action = []
+	# print "神秘代码：临兵斗者皆阵列前行"
     for player in players:
         if player['team'] == constants.team_id:
             action.append({"team": player['team'], "player_id": player['id'],

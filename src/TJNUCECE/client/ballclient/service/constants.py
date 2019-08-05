@@ -1,4 +1,4 @@
 #global variable here
-team_id = None
+team_id = 1112
 
 team_name = "TJNUCECE" # decided by yourself.

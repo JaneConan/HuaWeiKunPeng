@@ -1,1 +1,1 @@
-python -m ballclient.main $1 $2 $3
+python3 -m ballclient.main $1 $2 $3
